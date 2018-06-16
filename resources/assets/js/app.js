@@ -15,6 +15,12 @@ import User from './components/Helpers/User'
 window.User = User
 window.EventBus = new Vue()
 Vue.use(Vuetify);
+
+import VueSimplemde from 'vue-simplemde'
+
+Vue.use(VueSimplemde)
+import md from 'marked'
+window.md = md
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

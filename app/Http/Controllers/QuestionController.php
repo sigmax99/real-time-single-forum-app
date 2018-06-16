@@ -36,10 +36,13 @@ class QuestionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        Question::Create($request->all());
-        //auth()->user()->question()->create($request->all());
-        return response('Created',\Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
+    {   
+
+        //Question::Create($request->all());
+        //$request['slug'] = str_slug($request->title);
+        $question = auth()->user()->question()->create($request->all());
+        //return response('Created',\Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
+        return response( new QuestionResource($question),\Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
     }
 
     /**
