@@ -11,6 +11,7 @@ class Question extends Model
     // or
     
     //protected $guarded = [];
+    protected $with = ['replies'];
 
     protected static function boot(){
         parent::boot();
@@ -26,7 +27,7 @@ class Question extends Model
         return $this->belongsTo(User::class);
     }
     public function replies(){
-        return $this->hasMany(Reply::class);
+        return $this->hasMany(Reply::class)->latest();
     }
     public function category(){
         return $this->belongsTo(Category::class);

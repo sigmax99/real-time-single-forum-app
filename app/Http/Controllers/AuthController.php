@@ -8,7 +8,7 @@ use App\Http\Requests\SignupRequest;
 
 class AuthController extends Controller
 {
-     /**
+    /**
      * Create a new AuthController instance.
      *
      * @return void
@@ -16,7 +16,7 @@ class AuthController extends Controller
     public function __construct()
     {
         //$this->middleware('auth:api', ['except' => ['login','signup']]);
-        $this->middleware('JWT', ['except' => ['login','signup']]);
+        $this->middleware('JWT', ['except' => ['login', 'signup']]);
     }
 
     /**
@@ -28,13 +28,14 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         return $this->respondWithToken($token);
     }
-    public function signup(SignupRequest $request){
+    public function signup(SignupRequest $request)
+    {
         User::create($request->all());
         return $this->login($request);
     }
@@ -84,6 +85,7 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
             'user' => auth()->user()->name
+
         ]);
     }
 }
