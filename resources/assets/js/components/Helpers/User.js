@@ -2,49 +2,49 @@ import Token from './Token'
 import AppStorage from './AppStorage'
 
 class User {
-  login(data){
-    axios.post('/api/auth/login',data)
-        .then(res => this.responseAfterLogin(res))
-        .catch(error => console.log(error.response.data))
+  login(data) {
+    axios.post('/api/auth/login', data)
+      .then(res => this.responseAfterLogin(res))
+      .catch(error => console.log(error.response.data))
   }
-  responseAfterLogin(res){
+  responseAfterLogin(res) {
     const access_token = res.data.access_token
     const username = res.data.user
-    if(Token.isValid(access_token)){
-      AppStorage.store(username,access_token)
-      window.location = '/forum'  
+    if (Token.isValid(access_token)) {
+      AppStorage.store(username, access_token)
+      window.location = '/forum'
     }
   }
-  hasToken(){
+  hasToken() {
     const storedToken = AppStorage.getToken()
-    if(storedToken){
-      return Token.isValid(storedToken) ? true : false
+    if (storedToken) {
+      return Token.isValid(storedToken) ? true : this.logout()
     }
     return false
     //console.log(storedToken)
   }
-  loggedin(){
+  loggedin() {
     return this.hasToken()
   }
-  logout(){
+  logout() {
     AppStorage.clear()
     window.location = '/forum'
   }
-  name(){
-    if(this.loggedin()){
+  name() {
+    if (this.loggedin()) {
       return AppStorage.getUser()
-    }    
+    }
   }
-  id(){
-    if(this.loggedin()){
+  id() {
+    if (this.loggedin()) {
       const payload = Token.payload(AppStorage.getToken())
       return payload.sub
-    }    
+    }
   }
-  own(id){
+  own(id) {
     return this.id() == id
   }
-  admin(){
+  admin() {
     return this.id() == 12
   }
 }

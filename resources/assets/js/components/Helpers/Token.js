@@ -1,18 +1,28 @@
 class Token {
-  isValid(token){
+  isValid(token) {
     const payload = this.payload(token)
-    if(payload){
+    if (payload) {
       return (payload.iss == "http://127.0.0.2:8081/api/auth/login" || "http://127.0.0.2:8081/api/auth/signup") ? true : false
     }
     return false
   }
-  payload(token){
+  payload(token) {
     const payload = token.split('.')[1]
     //console.log(this.decode(payload))
     return this.decode(payload)
   }
-  decode(payload){
-    return JSON.parse(atob(payload))
+  decode(payload) {
+    if (this.isBase64(payload)) {
+      return JSON.parse(atob(payload))
+    }
+    return false
+  }
+  isBase64(str) {
+    try {
+      return btoa(atob(str)).replace(/=/g, "") == str
+    } catch (error) {
+      return false
+    }
   }
 }
 

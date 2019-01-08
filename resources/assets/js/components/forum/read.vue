@@ -5,7 +5,10 @@
     <show-question v-else :data="question"></show-question>
     <v-container>
       <replies :question="question"></replies>
-      <new-reply :questionSlug="question.slug"></new-reply>
+      <new-reply :questionSlug="question.slug" v-if="loggedin"></new-reply>
+      <div v-else class="mt-4">
+        <router-link to="/login">Login to Reply</router-link>
+      </div>
     </v-container>
   </div>
 </template>
@@ -32,6 +35,11 @@ export default {
   created() {
     this.listen();
     this.getQuestion();
+  },
+  computed: {
+    loggedin() {
+      return User.loggedin();
+    }
   },
   methods: {
     listen() {
