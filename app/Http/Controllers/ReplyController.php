@@ -7,10 +7,12 @@ use App\Model\Reply;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\ReplyResource;
+use App\Notifications\NewReplyNotification;
+
 
 class ReplyController extends Controller
 {
-     /**
+    /**
      * Create a new AuthController instance.
      *
      * @return void
@@ -18,7 +20,7 @@ class ReplyController extends Controller
     public function __construct()
     {
         //$this->middleware('auth:api', ['except' => ['login','signup']]);
-        $this->middleware('JWT', ['except' => ['index','show']]);
+        $this->middleware('JWT', ['except' => ['index', 'show']]);
     }
     /**
      * Display a listing of the resource.
@@ -38,10 +40,15 @@ class ReplyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Question $question,Request $request)
+    public function store(Question $question, Request $request)
     {
         $reply = $question->replies()->create($request->all());
-        return response(['reply'=> new ReplyResource($reply)],Response::HTTP_CREATED);
+
+        $user = $question->user;
+        if ($reply->user_id !== $question->user_id) {
+            $user->notify(new NewReplyNotification($reply));
+        }
+        return response(['reply' => new ReplyResource($reply)], Response::HTTP_CREATED);
     }
 
     /**
@@ -50,7 +57,7 @@ class ReplyController extends Controller
      * @param  \App\Model\Reply  $reply
      * @return \Illuminate\Http\Response
      */
-    public function show(Question $question,Reply $reply)
+    public function show(Question $question, Reply $reply)
     {
         return new ReplyResource($reply);
     }
@@ -62,10 +69,10 @@ class ReplyController extends Controller
      * @param  \App\Model\Reply  $reply
      * @return \Illuminate\Http\Response
      */
-    public function update(Question $question,Request $request, Reply $reply)
+    public function update(Question $question, Request $request, Reply $reply)
     {
         $reply->update($request->all());
-        return response('Updated',Response::HTTP_ACCEPTED);
+        return response('Updated', Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -74,9 +81,9 @@ class ReplyController extends Controller
      * @param  \App\Model\Reply  $reply
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Question $question,Reply $reply)
+    public function destroy(Question $question, Reply $reply)
     {
         $reply->delete();
-        return response(null,Response::HTTP_NO_CONTENT);
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

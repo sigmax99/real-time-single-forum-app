@@ -1,13 +1,18 @@
 <?php
 
-Route::apiResource('/question','QuestionController');
+use App\Http\Resources\NotificationResource;
 
-Route::apiResource('/category','CategoryController');
+Route::apiResource('/question', 'QuestionController');
 
-Route::apiResource('/question/{question}/reply','ReplyController');
+Route::apiResource('/category', 'CategoryController');
 
-Route::post('/like/{reply}','LikeController@likeIt');
-Route::delete('/like/{reply}','LikeController@unLikeIt');
+Route::apiResource('/question/{question}/reply', 'ReplyController');
+
+Route::post('/like/{reply}', 'LikeController@likeIt');
+Route::delete('/like/{reply}', 'LikeController@unLikeIt');
+
+Route::post('/notifications', 'NotificationController@index');
+Route::post('/markAsRead', 'NotificationController@markAsRead');
 
 Route::group([
 
