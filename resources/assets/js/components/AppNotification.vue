@@ -33,6 +33,7 @@ export default {
     if (User.loggedin()) {
       this.getNotifications();
     }
+    this.listen();
   },
   computed: {
     color() {
@@ -40,6 +41,13 @@ export default {
     }
   },
   methods: {
+    listen() {
+      Echo.private("App.User." + User.id()).notification(notification => {
+        //console.log(notification.type);
+        this.unread.unshift(notification);
+        this.unreadCount++;
+      });
+    },
     getNotifications() {
       axios.post("/api/notifications").then(res => {
         console.log(res);
