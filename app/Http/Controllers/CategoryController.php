@@ -6,10 +6,11 @@ use App\Model\Category;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\CategoryResource;
+use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends Controller
 {
-     /**
+    /**
      * Create a new AuthController instance.
      *
      * @return void
@@ -17,7 +18,7 @@ class CategoryController extends Controller
     public function __construct()
     {
         //$this->middleware('auth:api', ['except' => ['login','signup']]);
-        $this->middleware('JWT', ['except' => ['index','show']]);
+        $this->middleware('JWT', ['except' => ['index', 'show']]);
     }
     /**
      * Display a listing of the resource.
@@ -26,10 +27,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return CategoryResource::collection( category::latest()->get());
+        return CategoryResource::collection(category::latest()->get());
     }
 
-   
+
 
     /**
      * Store a newly created resource in storage.
@@ -37,7 +38,7 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
         //$category = Category::create($request->all());
         $category = new Category;
@@ -45,7 +46,7 @@ class CategoryController extends Controller
         $category->slug = str_slug($request->name);
         $category->save();
         //return response("created",Response::HTTP_CREATED);*/
-        return response( new CategoryResource($category),RESPONSE::HTTP_CREATED);
+        return response(new CategoryResource($category), RESPONSE::HTTP_CREATED);
     }
 
     /**
@@ -71,11 +72,12 @@ class CategoryController extends Controller
         //$category->update($request->all());
         $category->update(
             [
-                'name'=>$request->name,
-                'slug'=>str_slug($request->name)
-            ]);
+                'name' => $request->name,
+                'slug' => str_slug($request->name)
+            ]
+        );
         //return response('Updated',Response::HTTP_ACCEPTED);
-        return response(new CategoryResource($category),Response::HTTP_ACCEPTED);
+        return response(new CategoryResource($category), Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -87,6 +89,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return response(null,Response::HTTP_NO_CONTENT);
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

@@ -6,10 +6,11 @@ use App\Model\Question;
 use Illuminate\Http\Request;
 use App\Http\Resources\QuestionResource;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\QuestionRequest;
 
 class QuestionController extends Controller
 {
-     /**
+    /**
      * Create a new AuthController instance.
      *
      * @return void
@@ -17,7 +18,7 @@ class QuestionController extends Controller
     public function __construct()
     {
         //$this->middleware('auth:api', ['except' => ['login','signup']]);
-        $this->middleware('JWT', ['except' => ['index','show']]);
+        $this->middleware('JWT', ['except' => ['index', 'show']]);
     }
     /**
      * Display a listing of the resource.
@@ -35,14 +36,14 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(QuestionRequest $request)
     {   
 
         //Question::Create($request->all());
         //$request['slug'] = str_slug($request->title);
         $question = auth()->user()->question()->create($request->all());
         //return response('Created',\Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
-        return response( new QuestionResource($question),\Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
+        return response(new QuestionResource($question), \Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
     }
 
     /**
@@ -56,7 +57,7 @@ class QuestionController extends Controller
         return new QuestionResource($question);
     }
 
-    
+
 
     /**
      * Update the specified resource in storage.
@@ -68,7 +69,7 @@ class QuestionController extends Controller
     public function update(Request $request, Question $question)
     {
         $question->update($request->all());
-        return response('Update',Response::HTTP_ACCEPTED);
+        return response('Update', Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -80,6 +81,6 @@ class QuestionController extends Controller
     public function destroy(Question $question)
     {
         $question->delete();
-        return response('Deleted',\Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
+        return response('Deleted', \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }
 }

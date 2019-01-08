@@ -1,7 +1,9 @@
 <template>
-  <v-toolbar>
+  <v-toolbar color="indigo" dark>
     <!--<v-toolbar-side-icon></v-toolbar-side-icon>-->
-    <v-toolbar-title>Bitfumes</v-toolbar-title>
+    <v-toolbar-title>
+      <router-link to="/" class="white--text">Bitfumes</router-link>
+    </v-toolbar-title>
     <v-spacer></v-spacer>
     <app-notification v-if="loggedin"></app-notification>
     <div class="hidden-sm-and-down">
